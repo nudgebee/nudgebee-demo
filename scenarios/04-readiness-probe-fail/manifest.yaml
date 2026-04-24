@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-readiness-probe-fail
+  namespace: nudgebee-demo
+  labels:
+    app.kubernetes.io/part-of: nudgebee-demo
+    nudgebee.io/demo-scenario: readiness-probe-fail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-readiness-probe-fail
+  template:
+    metadata:
+      labels:
+        app: demo-readiness-probe-fail
+        app.kubernetes.io/part-of: nudgebee-demo
+        nudgebee.io/demo-scenario: readiness-probe-fail
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /this-endpoint-does-not-exist
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

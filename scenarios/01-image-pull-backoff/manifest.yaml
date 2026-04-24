@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-image-pull-backoff
+  namespace: nudgebee-demo
+  labels:
+    app.kubernetes.io/part-of: nudgebee-demo
+    nudgebee.io/demo-scenario: image-pull-backoff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-image-pull-backoff
+  template:
+    metadata:
+      labels:
+        app: demo-image-pull-backoff
+        app.kubernetes.io/part-of: nudgebee-demo
+        nudgebee.io/demo-scenario: image-pull-backoff
+    spec:
+      containers:
+        - name: app
+          image: gcr.io/nudgebee-demo-does-not-exist/this-image-does-not-exist:v1.0
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
