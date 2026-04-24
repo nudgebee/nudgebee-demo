@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-crashloopbackoff
+  namespace: nudgebee-demo
+  labels:
+    app.kubernetes.io/part-of: nudgebee-demo
+    nudgebee.io/demo-scenario: crashloopbackoff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-crashloopbackoff
+  template:
+    metadata:
+      labels:
+        app: demo-crashloopbackoff
+        app.kubernetes.io/part-of: nudgebee-demo
+        nudgebee.io/demo-scenario: crashloopbackoff
+    spec:
+      containers:
+        - name: app
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "demo-crashloopbackoff: starting"
+              echo "demo-crashloopbackoff: fatal: required config 'DATABASE_URL' is missing" >&2
+              exit 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

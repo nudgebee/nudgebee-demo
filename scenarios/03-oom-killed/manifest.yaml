@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-oom-killed
+  namespace: nudgebee-demo
+  labels:
+    app.kubernetes.io/part-of: nudgebee-demo
+    nudgebee.io/demo-scenario: oom-killed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-oom-killed
+  template:
+    metadata:
+      labels:
+        app: demo-oom-killed
+        app.kubernetes.io/part-of: nudgebee-demo
+        nudgebee.io/demo-scenario: oom-killed
+    spec:
+      containers:
+        - name: app
+          image: polinux/stress:latest
+          command:
+            - stress
+          args:
+            - --vm
+            - "1"
+            - --vm-bytes
+            - 256M
+            - --vm-hang
+            - "0"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
